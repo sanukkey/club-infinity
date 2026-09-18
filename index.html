@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Club INFINITY | 貴女のためだけの、プライベート・エスコートラウンジ</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Noto+Serif+JP:wght@200;300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+<!-- GSAP Animation Engine -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+<style>
+/* --- CORE VARIABLES --- */
+:root {
+  --bg-deep: #030304;
+  --bg-card: rgba(12, 12, 16, 0.65);
+  --bg-card-hover: rgba(18, 18, 24, 0.85);
+  --text-primary: #f5f4f0;
+  --text-muted: #a3a2a8;
+  --gold-light: #fceecb;
+  --gold-main: #d4af37;
+  --gold-dark: #aa7c11;
+  --gold-glow: rgba(212, 175, 55, 0.25);
+  --border-subtle: rgba(212, 175, 55, 0.18);
+  --border-active: rgba(212, 175, 55, 0.5);
+  --font-serif-en: 'Playfair Display', serif;
+  --font-sub-en: 'Cormorant Garamond', serif;
+  --font-jp: 'Noto Serif JP', serif;
+  --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- RESET & BASE --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-jp);
+  font-weight: 300;
+  line-height: 2.1;
+  letter-spacing: 0.08em;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+  background-color: var(--bg-deep);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--gold-main);
+  color: #000;
+}
+
+/* --- CUSTOM CURSOR --- */
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--gold-main);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s var(--ease-luxury), height 0.3s var(--ease-luxury), background-color 0.3s var(--ease-luxury), opacity 0.3s;
+  mix-blend-mode: difference;
+}
+
+#custom-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  background: var(--gold-light);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%, -50%);
+}
+
+body:hover #custom-cursor { opacity: 1; }
+.hover-active #custom-cursor {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(212, 175, 55, 0.15);
+  border-color: var(--gold-light);
+}
+
+/* --- CANVAS & BACKGROUND EFFECTS --- */
+#canvas-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.bg-image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 50% 30%, rgba(15, 12, 5, 0.4) 0%, rgba(3, 3, 4, 0.92) 80%),
+    linear-gradient(to bottom, rgba(3, 3, 4, 0.8), rgba(3, 3, 4, 0.95)),
+    url('https://images.unsplash.com/photo-1508615039623-a25605d2b022?q=80&w=1920&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  z-index: -1;
+  transform: scale(1.05);
+  animation: slowPan 30s infinite alternate ease-in-out;
+}
+
+@keyframes slowPan {
+  0% { transform: scale(1.05) translateY(0); }
+  100% { transform: scale(1.12) translateY(-15px); }
+}
+
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* --- LAYOUT GRID SYSTEM (BENTO) --- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 120px;
+  position: relative;
+  z-index: 2;
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+/* --- TYPOGRAPHY & GRADIENTS --- */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 8s linear infinite;
+}
+
+@keyframes shine {
+  to { background-position: 200% center; }
+}
+
+.highlight {
+  font-weight: 400;
+  color: var(--gold-light);
+  font-family: var(--font-serif-en);
+  font-size: 1.08em;
+  letter-spacing: 0.05em;
+  border-bottom: 1px dotted var(--border-subtle);
+  padding-bottom: 2px;
+}
+
+.section-label {
+  font-family: var(--font-sub-en);
+  font-size: 0.9rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  opacity: 0.85;
+  display: block;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.section-title {
+  font-family: var(--font-serif-en);
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 400;
+  text-align: center;
+  letter-spacing: 0.15em;
+  margin-bottom: 48px;
+  color: var(--gold-light);
+}
+
+/* --- GOLD THREAD DECORATION --- */
+.gold-thread {
+  width: 100%;
+  max-width: 420px;
+  height: 1px;
+  margin: 80px auto;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.2) 20%,
+    var(--gold-main) 50%,
+    rgba(212, 175, 55, 0.2) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 0 12px var(--gold-glow);
+  position: relative;
+}
+
+.gold-thread::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 7px;
+  height: 7px;
+  background: var(--gold-light);
+  box-shadow: 0 0 8px var(--gold-main);
+}
+
+/* --- HEADER / HERO SECTION --- */
+header {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 140px 20px 80px;
+  text-align: center;
+  z-index: 2;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 35px;
+}
+
+.logo-emblem {
+  width: 85px;
+  height: 85px;
+  margin-bottom: 30px;
+  filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.4));
+  transition: transform 0.8s var(--ease-luxury);
+}
+
+.logo-emblem:hover {
+  transform: rotate(180deg) scale(1.05);
+}
+
+.emblem-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.logo {
+  font-family: var(--font-serif-en);
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  letter-spacing: 0.35em;
+  font-weight: 400;
+  margin: 0 0 16px 0;
+  padding-left: 0.35em;
+  text-shadow: 0 0 35px rgba(212, 175, 55, 0.2);
+}
+
+.logo-sub {
+  font-family: var(--font-sub-en);
+  font-size: clamp(0.8rem, 1.5vw, 1.05rem);
+  letter-spacing: 0.5em;
+  color: var(--gold-light);
+  opacity: 0.85;
+  text-transform: uppercase;
+  padding-left: 0.5em;
+}
+
+header p {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--text-muted);
+  margin-top: 10px;
+  line-height: 2.4;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+}
+
+/* --- BENTO GLASS PANELS --- */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(212, 175, 55, 0.03);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.5s ease, box-shadow 0.5s ease, transform 0.5s var(--ease-luxury);
+}
+
+.glass-panel:hover {
+  border-color: rgba(212, 175, 55, 0.35);
+  box-shadow: 0 35px 70px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(212, 175, 55, 0.05);
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(212, 175, 55, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* BENTO ITEM SIZES & CARD SPECIFICS */
+.intro-card {
+  grid-column: span 12;
+  padding: clamp(36px, 5vw, 64px);
+}
+
+.bento-intro-lead {
+  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+  line-height: 2;
+  color: var(--gold-light);
+  margin-bottom: 32px;
+  text-align: center;
+  font-family: var(--font-serif-en);
+  font-weight: 400;
+}
+
+/* LISTS (Bento Adaptive) */
+ul {
+  list-style: none;
+  padding: 25px;
+  margin: 30px 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+ul li {
+  margin-bottom: 16px;
+  padding-left: 28px;
+  position: relative;
+  color: var(--text-muted);
+  font-size: 0.98rem;
+  transition: color 0.3s ease;
+}
+
+ul li:hover {
+  color: var(--text-primary);
+}
+
+ul li:last-child {
+  margin-bottom: 0;
+}
+
+ul li::before {
+  content: "◆";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  font-size: 0.6rem;
+  color: var(--gold-main);
+  opacity: 0.8;
+  text-shadow: 0 0 6px var(--gold-main);
+}
+
+/* About Bento Items */
+.about-main {
+  grid-column: span 7;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.about-sub {
+  grid-column: span 5;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(145deg, rgba(18,18,24,0.8) 0%, rgba(8,8,12,0.9) 100%);
+}
+
+/* Promise Bento */
+.promise-card {
+  grid-column: span 4;
+  padding: 40px 32px;
+  text-align: center;
+  position: relative;
+}
+
+.promise-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 50%, #aa771c 100%);
+  opacity: 0.4;
+}
+
+.promise-num {
+  font-family: var(--font-serif-en);
+  font-size: 2.5rem;
+  color: var(--gold-main);
+  opacity: 0.3;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.promise-title {
+  font-size: 1.2rem;
+  color: var(--gold-light);
+  margin-bottom: 16px;
+  letter-spacing: 0.12em;
+  font-weight: 400;
+}
+
+/* Cast Bento Cards */
+.cast-card {
+  grid-column: span 6;
+  padding: 36px;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 28px;
+  align-items: center;
+}
+
+.cast-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-active);
+  background: var(--bg-card-hover);
+}
+
+.cast-avatar-box {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, rgba(3, 3, 4, 0.95) 80%);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cast-avatar-box::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 60%, rgba(12, 12, 16, 0.6));
+}
+
+.cast-icon {
+  width: 60px;
+  height: 60px;
+  color: var(--gold-light);
+  opacity: 0.6;
+  transition: opacity 0.5s ease, transform 0.6s var(--ease-luxury);
+  filter: drop-shadow(0 0 8px var(--gold-glow));
+}
+
+.cast-card:hover .cast-icon {
+  opacity: 0.95;
+  transform: scale(1.1) rotate(2deg);
+}
+
+.cast-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.cast-title {
+  font-family: var(--font-sub-en);
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
+  color: var(--gold-main);
+  text-transform: uppercase;
+}
+
+.cast-name {
+  font-family: var(--font-serif-en);
+  font-size: 1.6rem;
+  color: var(--gold-light);
+  margin: 4px 0 12px 0;
+  letter-spacing: 0.15em;
+  font-weight: 400;
+}
+
+.cast-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.85;
+  margin: 0 0 12px 0;
+}
+
+/* Pricing Bento Table */
+.menu-card {
+  grid-column: span 12;
+  padding: 48px;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+
+th {
+  font-weight: 400;
+  color: var(--gold-light);
+  text-align: left;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0 16px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+td {
+  padding: 20px 16px;
+  background: rgba(255, 255, 255, 0.015);
+  border-top: 1px solid rgba(212, 175, 55, 0.08);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.08);
+  transition: background-color 0.3s;
+}
+
+tr:hover td {
+  background-color: rgba(212, 175, 55, 0.04);
+}
+
+td:nth-child(1) {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-left: 1px solid rgba(212, 175, 55, 0.08);
+  font-weight: 400;
+  color: var(--gold-light);
+  white-space: nowrap;
+  vertical-align: top;
+  font-family: var(--font-serif-en);
+  letter-spacing: 0.05em;
+}
+
+td:nth-child(2) {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+td:nth-child(3) {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-right: 1px solid rgba(212, 175, 55, 0.08);
+  text-align: right;
+  white-space: nowrap;
+  vertical-align: top;
+  font-family: var(--font-serif-en);
+  font-size: 1.25rem;
+  color: var(--gold-light);
+}
+
+.option-box {
+  grid-column: span 12;
+  padding: 32px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.08) 0%, rgba(12, 12, 16, 0.5) 100%);
+}
+
+.note {
+  text-align: center;
+  margin-top: 25px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+}
+
+/* Invitation & Reservation Bento */
+.invitation-card {
+  grid-column: span 6;
+  padding: 48px;
+}
+
+.reservation-card {
+  grid-column: span 6;
+  padding: 48px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: radial-gradient(circle at center, rgba(252, 238, 203, 0.05) 0%, rgba(12, 12, 16, 0.65) 100%);
+}
+
+.reservation-text {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  line-height: 2.2;
+}
+
+/* --- FOOTER & INSTAGRAM LINK --- */
+footer {
+  text-align: center;
+  padding: 80px 24px 50px;
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid var(--border-subtle);
+  background: rgba(3, 3, 4, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.insta-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  transition: all 0.5s var(--ease-luxury);
+  background: rgba(12, 12, 16, 0.6);
+  position: relative;
+}
+
+.insta-link:hover {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: var(--gold-main);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 15px var(--gold-glow);
+}
+
+.insta-icon {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  background: var(--gold-light);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M224 202.66A53.34 53.34 0 1 0 277.34 256 53.38 53.38 0 0 0 224 202.66Zm124.71-41a54 54 0 0 0-30.28-30.28C293.42 120 224 120 224 120s-69.42 0-94.43 11.38a54 54 0 0 0-30.28 30.28C88 186.58 88 256 88 256s0 69.42 11.38 94.43a54 54 0 0 0 30.28 30.28C154.58 392 224 392 224 392s69.42 0 94.43-11.38a54 54 0 0 0 30.28-30.28C360 325.42 360 256 360 256s0-69.42-11.29-94.34ZM224 338a82 82 0 1 1 82-82 81.9 81.9 0 0 1-82 82Zm85.38-148.3a19.14 19.14 0 1 1 19.14-19.14 19.1 19.1 0 0 1-19.14 19.14Z'/%3E%3C/svg%3E") no-repeat center;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M224 202.66A53.34 53.34 0 1 0 277.34 256 53.38 53.38 0 0 0 224 202.66Zm124.71-41a54 54 0 0 0-30.28-30.28C293.42 120 224 120 224 120s-69.42 0-94.43 11.38a54 54 0 0 0-30.28 30.28C88 186.58 88 256 88 256s0 69.42 11.38 94.43a54 54 0 0 0 30.28 30.28C154.58 392 224 392 224 392s69.42 0 94.43-11.38a54 54 0 0 0 30.28-30.28C360 325.42 360 256 360 256s0-69.42-11.29-94.34ZM224 338a82 82 0 1 1 82-82 81.9 81.9 0 0 1-82 82Zm85.38-148.3a19.14 19.14 0 1 1 19.14-19.14 19.1 19.1 0 0 1-19.14 19.14Z'/%3E%3C/svg%3E") no-repeat center;
+  transition: transform 0.3s ease;
+}
+
+footer p {
+  font-family: var(--font-serif-en);
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.2em;
+  margin-top: 20px;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media screen and (max-width: 992px) {
+  .about-main, .about-sub,
+  .promise-card,
+  .cast-card,
+  .invitation-card, .reservation-card {
+    grid-column: span 12;
+  }
+  
+  .cast-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
+  .cast-avatar-box {
+    margin: 0 auto;
+  }
+  
+  .option-box {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #custom-cursor, #custom-cursor-dot { display: none; }
+  
+  header {
+    min-height: 80vh;
+    padding: 100px 20px 50px;
+  }
+
+  .logo-emblem {
+    width: 65px;
+    height: 65px;
+    margin-bottom: 20px;
+  }
+
+  .container {
+    padding: 0 16px 80px;
+  }
+
+  .bento-grid {
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .glass-panel {
+    padding: 28px 20px !important;
+  }
+
+  .gold-thread {
+    max-width: 80%;
+    margin: 60px auto;
+  }
+
+  table, tbody, tr, td {
+    display: block;
+    width: 100%;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    margin-bottom: 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  td {
+    padding: 6px 0 !important;
+    border: none !important;
+    text-align: left !important;
+  }
+
+  td:nth-child(3) {
+    margin-top: 8px;
+    font-size: 1.1rem;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Custom Cursor Elements -->
+<div id="custom-cursor"></div>
+<div id="custom-cursor-dot"></div>
+
+<!-- Background Elements -->
+<div class="bg-image-overlay"></div>
+<canvas id="canvas-bg"></canvas>
+<div class="noise-overlay"></div>
+
+<header>
+  <div class="logo-container">
+    <div class="logo-emblem">
+      <!-- Luxury SVG Emblem (INFINITY Symbol ∞) -->
+      <svg viewBox="0 0 100 100" class="emblem-svg">
+        <polygon points="50,6 94,50 50,94 6,50"
+                 fill="none"
+                 stroke="url(#gold-grad)"
+                 stroke-width="1.2" />
+
+        <polygon points="50,15 85,50 50,85 15,50"
+                 fill="none"
+                 stroke="url(#gold-grad)"
+                 stroke-width="0.7"
+                 opacity="0.6" />
+
+        <circle cx="50"
+                cy="50"
+                r="18"
+                fill="none"
+                stroke="url(#gold-grad)"
+                stroke-width="0.8" />
+
+        <text x="50"
+              y="56"
+              font-family="'Cormorant Garamond', serif"
+              font-size="18"
+              fill="url(#gold-grad)"
+              text-anchor="middle">∞</text>
+
+        <defs>
+          <linearGradient id="gold-grad"
+                          x1="0%"
+                          y1="0%"
+                          x2="100%"
+                          y2="100%">
+            <stop offset="0%" stop-color="#8a6c20" />
+            <stop offset="40%" stop-color="#ebd07b" />
+            <stop offset="70%" stop-color="#c9a032" />
+            <stop offset="100%" stop-color="#6e5414" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <h1 class="logo text-gold-gradient">CLUB INFINITY</h1>
+
+    <span class="logo-sub">
+      EST. 2026 — PRIVATE LOUNGE
+    </span>
+  </div>
+
+  <p>
+    — 極上のエスコートで、ただ優しく迎えられる時間を —
+  </p>
+</header>
+
+<main class="container">
+
+  <div class="gold-thread" aria-hidden="true"></div>
+
+  <!-- INTRODUCTION Section (Bento Grid Layout) -->
+  <section class="bento-grid gsap-reveal">
+    <div class="glass-panel intro-card">
+      <span class="section-label">INTRODUCTION</span>
+      <h2 class="bento-intro-lead">
+        誰かのために生きる一日から、<br>ほんの少し離れて。
+      </h2>
+      <p style="text-align: center; color: var(--text-muted); max-width: 680px; margin: 0 auto 24px;">
+        いつも誰かを気遣って、ちゃんとしていることを求められて。<br>
+        気づけば、自分のために息をつく時間さえ少なくなっていませんか。<br>
+        ここでは、頑張らなくていい。気の利いた言葉も、笑顔も、話題も必要ありません。
+      </p>
+
+      <ul style="max-width: 640px; margin: 0 auto;">
+        <li>空気を読み、気を遣うだけの人間関係に疲れてしまった。</li>
+        <li>誰にもジャッジされず、ただそのままの私でいられる時間を優しく肯定されたい。</li>
+        <li>人に好かれるために作り上げた自分じゃなくて、ありのままの自分を出しても大丈夫な場所がほしい。</li>
+      </ul>
+
+      <p style="text-align: center; margin-top: 35px; color: var(--gold-light);">
+        そんな貴女の思いにそっと応える、<span class="highlight">Club INFINITY</span>。
+      </p>
+
+      <p style="text-align: center; margin-top: 20px; color: var(--gold-light); font-size: 1.05rem;">
+        「誰かのための私」を、ほんのひととき脱いで。<br>
+        本来の貴女に戻るための時間を、お過ごしください。
+      </p>
+    </div>
+  </section>
+
+  <div class="gold-thread" aria-hidden="true"></div>
+
+  <!-- ABOUT CONCEPT Section (Bento Grid Layout) -->
+  <section class="bento-grid gsap-reveal">
+    <div class="glass-panel about-main">
+      <span class="section-label" style="text-align: left;">CONCEPT</span>
+      <h2 class="section-title" style="text-align: left; margin-bottom: 24px;">ABOUT US</h2>
+      <p>
+        Club INFINITYは、レンタル彼氏でも、出張ホストでもない。<br>
+        貴女専属の執事と過ごす、会員制の<span class="highlight">プライベート・エスコートラウンジ</span>です。
+      </p>
+      <p>
+        声のトーン、間の取り方、言葉の選び方。<br>
+        沈黙さえも含めて、<br>
+        まるで高級ホテルのラウンジで、顔なじみの執事に迎えられるような感覚をお届けします。
+      </p>
+    </div>
+    <div class="glass-panel about-sub">
+      <p>
+        誰かの機嫌を気にする必要も、<br>
+        好かれるために頑張る必要も、<br>
+        沈黙を埋める必要もありません。
+      </p>
+      <p>
+        色恋営業のような下心はもちろん、<br>
+        ジャッジや自慢話、上から目線のアドバイスも一切ありません。
+      </p>
+      <p style="color: var(--gold-light); margin-top: 15px;">
+        高いコミュニケーション能力を持つ洗練された執事が、<br>
+        貴女が最も心地よくいられる距離で 優しくエスコートします。
+      </p>
+    </div>
+  </section>
+
+  <div class="gold-thread" aria-hidden="true"></div>
+
+  <!-- PROMISE Section (Bento Grid Layout) -->
+  <section class="bento-grid gsap-reveal">
+    <div class="glass-panel promise-card">
+      <span class="promise-num">01</span>
+      <h3 class="promise-title">秘密厳守</h3>
+      <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.9;">
+        オンラインの場合は顔出し不要、匿名でご利用いただけます。
+      </p>
+    </div>
+
+    <div class="glass-panel promise-card">
+      <span class="promise-num">02</span>
+      <h3 class="promise-title">勧誘なし</h3>
+      <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.9;">
+        強引な勧誘は一切ありません。
+      </p>
+    </div>
+
+    <div class="glass-panel promise-card">
+      <span class="promise-num">03</span>
+      <h3 class="promise-title">返金保証</h3>
+      <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.9;">
+        ご利用15分以内のキャンセルは返金対応いたします。
+      </p>
+    </div>
+
+    <div style="grid-column: span 12; margin-top: 20px;">
+      <p style="text-align: center; color: var(--gold-light);">
+        少しでも違和感を覚えられた場合は 遠慮なくお知らせください。<br>
+        安心してお過ごしいただけますよう、誠実に対応いたします。
+      </p>
+    </div>
+  </section>
+
+  <div class="gold-thread" aria-hidden="true"></div>
+
+  <!-- CAST Section (Bento Grid Layout) -->
+  <span class="section-label gsap-reveal">BUTLERS</span>
+  <h2 class="section-title gsap-reveal">CAST PROFILE</h2>
+
+  <section class="bento-grid gsap-reveal">
+    <!-- Cast 1 -->
+    <div class="glass-panel cast-card">
+      <div class="cast-avatar-box">
+        <svg class="cast-icon" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+      </div>
+
+      <div class="cast-details">
+        <span class="cast-title">Head Butler / 総支配人</span>
+        <h3 class="cast-name">TACAO</h3>
+        <p class="cast-desc">
+          日常の小さな疲れや誰にも言えなかった想いを、優しく紐解くような時間をお届けします。
+        </p>
+        <div>
+          <a class="insta-link" href="https://www.instagram.com/tacaoism" target="_blank" rel="noopener" aria-label="TACAO Instagram">
+            <span class="insta-icon"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cast 2 -->
+    <div class="glass-panel cast-card">
+      <div class="cast-avatar-box">
+        <svg class="cast-icon" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+      </div>
+
+      <div class="cast-details">
+        <span class="cast-title">Butler / 幹部</span>
+        <h3 class="cast-name">専属執事1</h3>
+        <p class="cast-desc">
+          どのようなお話も静かに受け止め、包み込むような安心感を提供します。
+        </p>
+        <div>
+          <a class="insta-link" href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Rui Instagram">
+            <span class="insta-icon"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cast 3 -->
+    <div class="glass-panel cast-card">
+      <div class="cast-avatar-box">
+        <svg class="cast-icon" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+      </div>
+
+      <div class="cast-details">
+        <span class="cast-title">Butler / 幹部補佐</span>
+        <h3 class="cast-name">専属執事2</h3>
+        <p class="cast-desc">
+          貴女が最も心地良くいられる距離感を大切にします。
+        </p>
+        <div>
+          <a class="insta-link" href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Ren Instagram">
+            <span class="insta-icon"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cast 4 -->
+    <div class="glass-panel cast-card">
+      <div class="cast-avatar-box">
+        <svg class="cast-icon" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+      </div>
+
+      <div class="cast-details">
+        <span class="cast-title">Butler</span>
+        <h3 class="cast-name">専属執事3</h3>
+        <p class="cast-desc">
+          心を尽くしたエスコートで、極上の寛ぎをお約束いたします。
+        </p>
+        <div>
+          <a class="insta-link" href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="専属執事 Instagram">
+            <span class="insta-icon"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="gold-thread" aria-hidden="true"></div>
+
+  <!-- MENU Section (Bento Grid Layout) -->
+  <span class="section-label gsap-reveal">PLAN & PRICE</span>
+  <h2 class="section-title gsap-reveal">MENU</h2>
+
+  <section class="bento-grid gsap-reveal">
+    <div class="glass-panel menu-card">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>MENU</th>
+              <th>ご案内</th>
+              <th style="text-align: right;">価格</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>First Invitation</td>
+              <td>
+                はじめての方へ。<br>
+                Club INFINITYの空気感、執事との距離感を確かめていただくための時間です。
+              </td>
+              <td>¥5,000</td>
+            </tr>
+            <tr>
+              <td>Online</td>
+              <td>
+                30 min<br>
+                日常の合間に、ふと心を解きほぐしたくなったときのショートプラン。
+              </td>
+              <td>¥5,000</td>
+            </tr>
+            <tr>
+              <td>Online</td>
+              <td>
+                60 min<br>
+                時間を急がず、ゆっくりと。言葉も沈黙も、そのまま楽しむ時間。
+              </td>
+              <td>¥9,000</td>
+            </tr>
+            <tr>
+              <td>Online</td>
+              <td>
+                90 min<br>
+                時間を気にせず、ゆっくりと。思いのままに深く寛ぐディープリラクゼーション。
+              </td>
+              <td>¥13,000</td>
+            </tr>
+            <tr>
+              <td>Private Escort</td>
+              <td>
+                2 hours<br>
+                日常の扉を閉じて、目の前の執事と過ごす、静かなプライベートエスコート。
+              </td>
+              <td>¥25,000</td>
+            </tr>
+            <tr>
+              <td>Private Escort</td>
+              <td>
+                3 hours<br>
+                食事や散策、ラウンジでのひととき。時間そのものをゆっくり楽しむエスコート。
+              </td>
+              <td>¥35,000</td>
+            </tr>
+            <tr>
+              <td>Private Day</td>
+              <td>
+                一日のためだけに組み立てる、特別なプライベートエスコート。
+              </td>
+              <td>¥50,000〜</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Option Bento Panels -->
+    <div class="glass-panel option-box">
+      <div>
+        <h4 style="font-size: 1.1rem; color: var(--gold-light); font-weight: 400;">Butler Designation (執事指名)</h4>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 4px;">お気に入りの執事を、次の時間にも。貴女にとって心地よい関係を大切にします。</p>
+      </div>
+      <div style="font-family: var(--font-serif-en); font-size: 1.25rem; color: var(--gold-light);">¥3,000</div>
+    </div>
+
+    <div class="glass-panel option-box">
+      <div>
+        <h4 style="font-size: 1.1rem; color: var(--gold-light); font-weight: 400;">Extension (ご延長 30分)</h4>
+      </div>
+      <div style="font-family: var(--font-serif-en); font-size: 1.25rem; color: var(--gold-light);">¥5,000</div>
+    </div>
+
+    <div style="grid-column: span 12;">
+      <p class="note">
+        ※料金は税込表示を基本とし、各プランの提供条件・キャンセル規定等はご予約時にご案内いたします。
+      </p>
+    </div>
+  </section>
+
+  <div class="gold-thread" aria-hidden="true"></div>
+
+  <!-- INVITATION & RESERVATION Section (Bento Grid Layout) -->
+  <section class="bento-grid gsap-reveal">
+    <div class="glass-panel invitation-card">
+      <span class="section-label" style="text-align: left;">MEMBERSHIP</span>
+      <h3 style="font-size: 1.4rem; font-weight: 400; margin-bottom: 20px; color: var(--gold-light);">INFINITY INVITATION</h3>
+      <ul style="margin: 0; padding: 0; background: transparent; border: none;">
+        <li>ご紹介された方には、First Invitationを特別価格でご案内いたします。</li>
+        <li>ご紹介いただいた会員様には、次回利用に使えるINFINITY Creditを付与いたします。</li>
+        <li>一定数のご紹介をいただいた方には、特別なご案内をご用意しております。</li>
+      </ul>
+    </div>
+
+    <div class="glass-panel reservation-card">
+      <span class="section-label">RESERVATION</span>
+      <h3 style="font-size: 1.4rem; font-weight: 400; margin-bottom: 16px; color: var(--gold-light);">ご予約方法</h3>
+      <p class="reservation-text">
+        当ラウンジは完全会員制です。<br>
+        ご紹介者様を通じてお申し付けください。
+      </p>
+      <p class="reservation-text" style="margin-top: 20px;">
+        初めての方は、まず<span class="highlight"> First Invitation </span>から。<br>
+        無理に会員登録をお勧めすることはありません。
+      </p>
+      <p style="text-align: center; margin-top: 30px; color: var(--gold-light); letter-spacing: 0.4em;">
+        ✦ ✦ ✦
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <a
+    class="insta-link"
+    href="https://www.instagram.com/tacaoism"
+    target="_blank"
+    rel="noopener"
+    aria-label="Instagram"
+  >
+    <span class="insta-icon"></span>
+  </a>
+
+  <p>© 2026 Club INFINITY</p>
+</footer>
+
+<script>
+/* --- INTERACTIVE CANVAS: LUXURY GOLD DUST PARTICLES --- */
+const canvas = document.getElementById('canvas-bg');
+const ctx = canvas.getContext('2d');
+
+let width, height;
+let particles = [];
+
+function resizeCanvas() {
+  width = canvas.width = window.innerWidth;
+  height = canvas.height = window.innerHeight;
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+class Particle {
+  constructor() {
+    this.reset();
+  }
+
+  reset() {
+    this.x = Math.random() * width;
+    this.y = Math.random() * height;
+    this.size = Math.random() * 1.8 + 0.2;
+    this.speedX = (Math.random() - 0.5) * 0.3;
+    this.speedY = -Math.random() * 0.4 - 0.1;
+    this.opacity = Math.random() * 0.6 + 0.1;
+    this.fade = Math.random() * 0.005 + 0.002;
+  }
+
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.opacity -= this.fade;
+
+    if (this.opacity <= 0 || this.y < 0) {
+      this.reset();
+      this.y = height + 10;
+    }
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(235, 208, 123, ${this.opacity})`;
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = 'rgba(212, 175, 55, 0.8)';
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 65; i++) {
+  particles.push(new Particle());
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, width, height);
+  particles.forEach(p => {
+    p.update();
+    p.draw();
+  });
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+/* --- CUSTOM CURSOR LOGIC --- */
+const cursor = document.getElementById('custom-cursor');
+const cursorDot = document.getElementById('custom-cursor-dot');
+
+let mouseX = 0, mouseY = 0;
+let cursorX = 0, cursorY = 0;
+
+window.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  
+  cursorDot.style.left = `${mouseX}px`;
+  cursorDot.style.top = `${mouseY}px`;
+});
+
+function renderCursor() {
+  cursorX += (mouseX - cursorX) * 0.15;
+  cursorY += (mouseY - cursorY) * 0.15;
+  cursor.style.left = `${cursorX}px`;
+  cursor.style.top = `${cursorY}px`;
+  
+  requestAnimationFrame(renderCursor);
+}
+renderCursor();
+
+const hoverTargets = document.querySelectorAll('a, button, .glass-panel');
+hoverTargets.forEach(target => {
+  target.addEventListener('mouseenter', () => document.body.classList.add('hover-active'));
+  target.addEventListener('mouseleave', () => document.body.classList.remove('hover-active'));
+});
+
+/* --- GSAP SCROLL ANIMATIONS --- */
+gsap.registerPlugin(ScrollTrigger);
+
+gsap.from("header .logo-emblem", {
+  duration: 1.8,
+  y: 30,
+  opacity: 0,
+  ease: "power4.out"
+});
+
+gsap.from("header .logo", {
+  duration: 2,
+  y: 40,
+  opacity: 0,
+  delay: 0.3,
+  ease: "power4.out"
+});
+
+gsap.from("header .logo-sub, header p", {
+  duration: 1.5,
+  y: 20,
+  opacity: 0,
+  delay: 0.6,
+  stagger: 0.2,
+  ease: "power3.out"
+});
+
+const sections = document.querySelectorAll('.gsap-reveal');
+sections.forEach(sec => {
+  gsap.from(sec, {
+    scrollTrigger: {
+      trigger: sec,
+      start: "top 85%",
+      toggleActions: "play none none reverse"
+    },
+    duration: 1.2,
+    y: 50,
+    opacity: 0,
+    ease: "power3.out"
+  });
+});
+
+const threads = document.querySelectorAll('.gold-thread');
+threads.forEach(thread => {
+  gsap.from(thread, {
+    scrollTrigger: {
+      trigger: thread,
+      start: "top 90%"
+    },
+    duration: 1.5,
+    scaleX: 0,
+    opacity: 0,
+    ease: "power4.inOut"
+  });
+});
+</script>
+
+</body>
+</html>
