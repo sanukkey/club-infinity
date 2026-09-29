@@ -767,6 +767,180 @@ footer p {
     font-size: 1.1rem;
   }
 }
+
+/* --- DIFFERENCE SECTION --- */
+.difference-main {
+  grid-column: span 12;
+  padding: clamp(40px, 5vw, 72px);
+  text-align: center;
+  background: linear-gradient(145deg, rgba(18,18,24,0.88) 0%, rgba(8,8,12,0.97) 100%);
+}
+
+.difference-only-badge {
+  font-family: var(--font-sub-en);
+  font-size: 0.88rem;
+  letter-spacing: 0.5em;
+  color: var(--gold-main);
+  margin-bottom: 32px;
+  text-transform: uppercase;
+  text-shadow: 0 0 20px var(--gold-glow);
+  display: block;
+}
+
+.difference-lead-text {
+  font-size: clamp(0.98rem, 1.7vw, 1.22rem);
+  color: var(--text-primary);
+  line-height: 2.4;
+  max-width: 760px;
+  margin: 0 auto;
+  letter-spacing: 0.1em;
+}
+
+.difference-card {
+  grid-column: span 6;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.diff-service-title {
+  font-family: var(--font-sub-en);
+  font-size: 0.82rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  padding: 18px 28px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(212,175,55,0.04);
+}
+
+.diff-versus {
+  padding: 22px 28px;
+  background: rgba(255,255,255,0.018);
+  border-left: 3px solid rgba(255,255,255,0.1);
+  flex: 1;
+}
+
+.diff-infinity {
+  padding: 22px 28px;
+  background: rgba(212,175,55,0.055);
+  border-left: 3px solid var(--gold-main);
+  flex: 1;
+}
+
+.diff-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--font-sub-en);
+}
+
+.diff-label.vs-label {
+  color: rgba(255,255,255,0.28);
+}
+
+.diff-label.inf-label {
+  color: var(--gold-main);
+  text-shadow: 0 0 8px var(--gold-glow);
+}
+
+.diff-versus p {
+  font-size: 0.88rem;
+  color: rgba(200,199,205,0.9);
+  line-height: 1.85;
+  font-style: italic;
+}
+
+.diff-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+}
+
+.diff-infinity p {
+  font-size: 0.9rem;
+  color: var(--gold-light);
+  line-height: 1.95;
+}
+
+@media screen and (max-width: 992px) {
+  .difference-card {
+    grid-column: span 12;
+  }
+}
+
+/* --- VOICE MESSAGE SECTION --- */
+.voice-recruit-card {
+  grid-column: span 12;
+  padding: clamp(40px, 5vw, 64px);
+  text-align: center;
+  background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.07) 0%, rgba(8,8,12,0.9) 65%);
+}
+
+.voice-recruit-lead {
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  color: var(--text-muted);
+  line-height: 2.2;
+  max-width: 620px;
+  margin: 0 auto 40px;
+}
+
+.voice-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-sub-en);
+  font-size: 0.88rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  border: 1px solid var(--border-active);
+  padding: 16px 42px;
+  text-decoration: none;
+  transition: all 0.4s var(--ease-luxury);
+  background: rgba(212,175,55,0.06);
+  cursor: pointer;
+  margin-bottom: 48px;
+}
+
+.voice-btn:hover {
+  background: rgba(212,175,55,0.15);
+  border-color: var(--gold-light);
+  box-shadow: 0 0 28px var(--gold-glow);
+  transform: translateY(-2px);
+}
+
+.voice-player-area {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 40px 32px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(0,0,0,0.35);
+  max-width: 580px;
+  margin: 0 auto;
+  border-radius: 10px;
+  box-shadow: inset 0 0 30px rgba(212,175,55,0.04);
+}
+
+.voice-player-area.visible {
+  display: flex;
+}
+
+.voice-player-label {
+  font-size: 0.95rem;
+  color: var(--gold-light);
+  letter-spacing: 0.15em;
+  line-height: 2;
+}
+
+#voice-player {
+  width: 100%;
+  max-width: 480px;
+}
 </style>
 </head>
 
@@ -944,6 +1118,82 @@ footer p {
 
   <div class="gold-thread" aria-hidden="true"></div>
 
+  <!-- DIFFERENCE Section -->
+  <span class="section-label gsap-reveal">DIFFERENCE</span>
+  <h2 class="section-title gsap-reveal">WHY CLUB INFINITY</h2>
+
+  <section class="bento-grid gsap-reveal">
+    <!-- メインリード -->
+    <div class="glass-panel difference-main">
+      <span class="difference-only-badge">✦ CLUB INFINITY ONLY ✦</span>
+      <p class="difference-lead-text">
+        何かを成し遂げなくても。相手を喜ばせなくても。<br>
+        「魅力的な私」を演じなくても。<br>
+        ただそこにいる貴女を、ひとりの掛け替えのない存在として丁寧に扱う。<br>
+        評価も、期待も、役割も存在しない――<br>
+        本来の貴女に戻れる唯一のプライベート・エスコートです。
+      </p>
+    </div>
+
+    <!-- レンタル彼氏 -->
+    <div class="glass-panel difference-card">
+      <div class="diff-service-title">レンタル彼氏</div>
+      <div class="diff-versus">
+        <span class="diff-label vs-label">一般的な定義</span>
+        <p>擬似恋愛や「好かれるための振る舞い」を求める場所ではありません。</p>
+      </div>
+      <div class="diff-divider"></div>
+      <div class="diff-infinity">
+        <span class="diff-label inf-label">CLUB INFINITYの約束</span>
+        <p>恋愛の駆け引きも距離の接近も不要。貴女が心地よいと感じる距離感だけを徹底的に尊重します。</p>
+      </div>
+    </div>
+
+    <!-- 出張ホスト -->
+    <div class="glass-panel difference-card">
+      <div class="diff-service-title">出張ホスト</div>
+      <div class="diff-versus">
+        <span class="diff-label vs-label">一般的な定義</span>
+        <p>「盛り上げなきゃ」「楽しませなきゃ」と気を遣う場所ではありません。</p>
+      </div>
+      <div class="diff-divider"></div>
+      <div class="diff-infinity">
+        <span class="diff-label inf-label">CLUB INFINITYの約束</span>
+        <p>話したい時は話し、黙っていたい時は黙っている。何もしない無に浸る時間すら、最高の贅沢として大切に扱います。</p>
+      </div>
+    </div>
+
+    <!-- カウンセリング・コーチング -->
+    <div class="glass-panel difference-card">
+      <div class="diff-service-title">カウンセリング・コーチング</div>
+      <div class="diff-versus">
+        <span class="diff-label vs-label">一般的な定義</span>
+        <p>「課題解決」や「成長・変化」を目的とする場所ではありません。</p>
+      </div>
+      <div class="diff-divider"></div>
+      <div class="diff-infinity">
+        <span class="diff-label inf-label">CLUB INFINITYの約束</span>
+        <p>アドバイスも反省も答え合わせも一切求めません。今のままの貴女で、ただ安心して佇める時間を提供します。</p>
+      </div>
+    </div>
+
+    <!-- AI対話 -->
+    <div class="glass-panel difference-card">
+      <div class="diff-service-title">AI対話・デジタル対話</div>
+      <div class="diff-versus">
+        <span class="diff-label vs-label">一般的な定義</span>
+        <p>画面越しのテキストや「大丈夫」という形式的な言葉の提供ではありません。</p>
+      </div>
+      <div class="diff-divider"></div>
+      <div class="diff-infinity">
+        <span class="diff-label inf-label">CLUB INFINITYの約束</span>
+        <p>声の温もり、絶妙な間、静寂の空気、まなざし。人と人の間にしか生まれない「心身で味わう本物の体感」を届けます。</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="gold-thread" aria-hidden="true"></div>
+
   <!-- CAST Section (Bento Grid Layout) -->
   <span class="section-label gsap-reveal">BUTLERS</span>
   <h2 class="section-title gsap-reveal">CAST PROFILE</h2>
@@ -1034,6 +1284,35 @@ footer p {
             <span class="insta-icon"></span>
           </a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="gold-thread" aria-hidden="true"></div>
+
+  <!-- CAST RECRUITMENT / VOICE MESSAGE Section -->
+  <span class="section-label gsap-reveal">CAST RECRUITMENT</span>
+  <h2 class="section-title gsap-reveal">VOICE MESSAGE</h2>
+
+  <section class="bento-grid gsap-reveal">
+    <div class="glass-panel voice-recruit-card">
+      <p class="voice-recruit-lead">
+        Club INFINITYでは、共に場を創る執事を募集しています。<br>
+        まずは、総支配人TACAOからの音声メッセージをお聴きください。
+      </p>
+
+      <a id="voice-message-btn" class="voice-btn" href="#voice">
+        <span class="voice-btn-icon">▶</span>
+        VOICE MESSAGE
+      </a>
+
+      <div id="voice" class="voice-player-area">
+        <p class="voice-player-label">
+          総支配人 TACAO より、貴女へ届ける音声メッセージ
+        </p>
+        <audio id="voice-player" src="音声.mp4" controls>
+          お使いのブラウザは audio タグに対応していません。
+        </audio>
       </div>
     </div>
   </section>
@@ -1338,6 +1617,30 @@ threads.forEach(thread => {
     ease: "power4.inOut"
   });
 });
+
+/* --- VOICE MESSAGE PLAYER --- */
+const voiceBtn = document.getElementById('voice-message-btn');
+const voiceArea = document.getElementById('voice');
+const voicePlayer = document.getElementById('voice-player');
+
+if (voiceBtn && voiceArea && voicePlayer) {
+  voiceBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+
+    // プレーヤーエリアを表示
+    voiceArea.classList.add('visible');
+
+    // スムーズスクロール
+    voiceArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // ユーザー操作をトリガーとして音声再生
+    setTimeout(function () {
+      voicePlayer.play().catch(function () {
+        // 自動再生がブロックされた場合は表示のみ継続
+      });
+    }, 600);
+  });
+}
 </script>
 
 </body>
